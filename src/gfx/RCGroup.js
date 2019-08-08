@@ -43,6 +43,23 @@ class RCGroup extends THREE.Group {
     }
   }
 
+  getSubsetProcessor(mask, innerOnly) {
+    const totalSubset = [];
+    const { children } = this;
+    let meshIdx = 0;
+    for (let i = 0, n = children.length; i < n; ++i) {
+      if (children[i].getSubset) {
+        const chSubset = children[i].getSubset(mask, innerOnly);
+        for (let j = 0, m = chSubset.length; j < m; ++j) {
+          const subsetEl = chSubset[j];
+          subsetEl._component = children[i]._component;
+          totalSubset[meshIdx++] = subsetEl;
+        }
+      }
+    }
+    return totalSubset;
+  }
+
   getSubset(mask, innerOnly) {
     const totalSubset = [];
     const { children } = this;
