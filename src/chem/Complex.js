@@ -1067,6 +1067,21 @@ class Complex {
     return this._voxelWorld;
   }
 
+  addStructure(complex, bias, identifier) {
+    for (let i = 0; i < complex[`_${identifier}s`].length; i++) {
+      const a = complex[`_${identifier}s`][i];
+      if (identifier === 'atom') {
+        a._serial += bias;
+      } else if (identifier === 'component' || identifier === 'chain') {
+        a._complex = this;
+      }
+      if (identifier === 'atom' || identifier === 'bond' || identifier === 'chain' || identifier === 'bond' || identifier === 'component') {
+        a._index += bias;
+      }
+      this[`_${identifier}s`].push(a);
+    }
+  }
+
   // this function joins multiple complexes into one (this)
   // atom, bond, ... objects are reused -- so input complexes are no longer valid
   joinComplexes(complexes) {
@@ -1092,8 +1107,17 @@ class Complex {
     for (i = 0; i < complexes.length; ++i) {
       const c = complexes[i];
 
+      this.addStructure(c, atomBias, 'atom');
+      this.addStructure(c, bondBias, 'bond');
+      this.addStructure(c, residueBias, 'residue');
+      this.addStructure(c, chainBias, 'chain');
+      this.addStructure(c, null, 'sheet');
+      this.addStructure(c, null, 'helice');
+      this.addStructure(c, null, 'sgroup');
+      this.addStructure(c, componentBias, 'component');
+
       // add atoms
-      for (j = 0; j < c._atoms.length; ++j) {
+      /* for (j = 0; j < c._atoms.length; ++j) {
         const a = c._atoms[j];
         a._serial += atomBias;
         a._index += atomBias;
@@ -1122,10 +1146,6 @@ class Complex {
         this._chains.push(chain);
       }
 
-      // add structures
-      for (j = 0; j < c.structures.length; ++j) {
-        this.structures.push(c.structures[j]);
-      }
 
       // add sheets
       for (j = 0; j < c._sheets.length; ++j) {
@@ -1149,7 +1169,11 @@ class Complex {
         comp._index += componentBias;
         this._components.push(comp);
       }
-
+*/
+      // add structures
+      for (j = 0; j < c.structures.length; ++j) {
+        this.structures.push(c.structures[j]);
+      }
       // merge residue types
       for (const rt in c._residueTypes) {
         if (c._residueTypes.hasOwnProperty(rt)) {
