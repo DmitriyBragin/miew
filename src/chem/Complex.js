@@ -1072,10 +1072,11 @@ class Complex {
       const a = complex[`_${identifier}s`][i];
       if (identifier === 'atom') {
         a._serial += bias;
+        a._index += bias;
       } else if (identifier === 'component' || identifier === 'chain') {
         a._complex = this;
-      }
-      if (identifier === 'atom' || identifier === 'bond' || identifier === 'chain' || identifier === 'bond' || identifier === 'component') {
+        a._index += bias;
+      } else if (identifier === 'bond' || identifier === 'residue') {
         a._index += bias;
       }
       this[`_${identifier}s`].push(a);
