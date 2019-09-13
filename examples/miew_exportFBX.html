@@ -29,26 +29,30 @@
 
       function loadMoleculeSaveFBX(moleculeID) {
         const reprList = [];
-        viewer.load(moleculeID).then( () => {
-          for(let j = 0; j < repModes.length + 1; ++j) { /* +1 will give us undefined but will start last exporting.*/
+        for(let j = 0; j < 1/*repModes.length + 1*/; ++j) { /* +1 will give us undefined but will start last exporting.*/
+          viewer.load(moleculeID).then(() => {
+            console.log('horray');
             const representation = {
               mode: repModes[j],
               colorer: 'EL',
             };
             reprList[j] = representation;
-             /* (async () => {
+            /* (async () => {
               viewer.rep(reprList[j]);
               const data = await viewer.rebuild();
               viewer.save({ fileType: 'fbx' });
             })(); */
 
-            setTimeout(() => {
+            //setTimeout(() => {
               viewer.rep(reprList[j]);
               viewer.rebuild();
-              setTimeout(() => viewer.save({ fileType: 'fbx' }), j * 1000);
-            }, j * 2000);
-          }
-        });
+              setTimeout(() => {
+                viewer.save({fileType: 'fbx'});
+                console.log('save');
+              }, 10000);
+          //  }, j * 2000);
+          });
+        }
         viewer.unload();
       }
 
